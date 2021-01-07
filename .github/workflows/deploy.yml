@@ -24,7 +24,7 @@ jobs:
         with:
           azcliversion: 2.0.72
           inlineScript: az storage blob upload-batch --account-name ${{ secrets.STORAGE_ACCOUNT_NAME }} -d '$web' -s .
-      - uses: azure/CLI
+      - uses: azure/CLI@v1
         with:
           azcliversion: 2.0.72
           inlineScript: az cdn endpoint purge --content-paths "/* --profile-name "${{ secrets.CDN_PROFILE_NAME }}" --name "${{ secrets.CDN_ENDPOINT }}" --resource-group "${{ secrets.RESOURCE_GROUP }}"         
