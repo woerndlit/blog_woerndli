@@ -27,6 +27,6 @@ jobs:
       - uses: azure/CLI
         with:
           azcliversion: 2.0.72
-          inlineScript: az cdn endpoint purge --content-paths "/* --profile-name "${{ secrets.CDN_PROFILE_NAME }}" --name "${{ secrets.CDN_ENDPOINT_NAME }}" --resource-group "${{ secrets.RESOURCE_GROUP }}"         
+          inlineScript: az cdn endpoint purge --content-paths "/* --profile-name "${{ secrets.CDN_PROFILE_NAME }}" --name "${{ secrets.CDN_ENDPOINT }}" --resource-group "${{ secrets.RESOURCE_GROUP }}"         
       - run: |
               az logout
