@@ -1,0 +1,43 @@
+{
+  "name": "",
+  "isOrdered": true,
+  "folders": {
+    "input": {
+      "name": "input",
+      "isOrdered": true,
+      "folders": {
+        "posts": {
+          "name": "posts",
+          "isOrdered": true,
+          "folders": {
+            "2021": {
+              "name": "2021",
+              "isOrdered": true,
+              "folders": {},
+              "files": {
+                "blog_start": 0
+              }
+            }
+          },
+          "files": {}
+        }
+      },
+      "files": {}
+    },
+    "obj": {
+      "name": "obj",
+      "isOrdered": true,
+      "folders": {},
+      "files": {}
+    },
+    "theme": {
+      "name": "theme",
+      "isOrdered": true,
+      "folders": {},
+      "files": {}
+    }
+  },
+  "files": {
+    "README": 0
+  }
+}
