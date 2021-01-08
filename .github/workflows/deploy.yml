@@ -23,6 +23,10 @@ jobs:
       - uses: azure/CLI@v1
         with:
           azcliversion: 2.0.72
+          inlineScript: az storage blob delete-batch --account-name ${{ secrets.STORAGE_ACCOUNT_NAME }} -s '$web'
+      - uses: azure/CLI@v1
+        with:
+          azcliversion: 2.0.72
           inlineScript: az storage blob upload-batch --account-name ${{ secrets.STORAGE_ACCOUNT_NAME }} -d '$web' -s ./output
       - uses: azure/CLI@v1
         with:
