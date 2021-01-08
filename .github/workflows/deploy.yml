@@ -17,7 +17,7 @@ jobs:
         with:
           dotnet-version: '5.0.1'
       - run: dotnet build
-      - uses: actions/login@v1
+      - uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
       - uses: azure/CLI@v1
