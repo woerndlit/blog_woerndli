@@ -1,25 +1,31 @@
 {
   "format": 1,
   "restore": {
-    "C:\\GIT\\blog_woerndli\\blog_woerndli.csproj": {}
+    "C:\\GIT\\Blog\\blog_woerndli\\blog_woerndli.csproj": {}
   },
   "projects": {
-    "C:\\GIT\\blog_woerndli\\blog_woerndli.csproj": {
+    "C:\\GIT\\Blog\\blog_woerndli\\blog_woerndli.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\GIT\\blog_woerndli\\blog_woerndli.csproj",
+        "projectUniqueName": "C:\\GIT\\Blog\\blog_woerndli\\blog_woerndli.csproj",
         "projectName": "blog_woerndli",
-        "projectPath": "C:\\GIT\\blog_woerndli\\blog_woerndli.csproj",
-        "packagesPath": "C:\\Users\\TobiasWörndli\\.nuget\\packages\\",
-        "outputPath": "C:\\GIT\\blog_woerndli\\obj\\",
+        "projectPath": "C:\\GIT\\Blog\\blog_woerndli\\blog_woerndli.csproj",
+        "packagesPath": "C:\\Users\\tobia\\.nuget\\packages\\",
+        "outputPath": "C:\\GIT\\Blog\\blog_woerndli\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Microsoft\\Xamarin\\NuGet\\"
+        ],
         "configFilePaths": [
-          "C:\\Users\\TobiasWörndli\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\tobia\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net5.0"
         ],
         "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
