@@ -1,5 +1,5 @@
 MinimumStatiqWebVersion-CleanBlog: "1.0.0-beta.3"
-SiteTitle: woernd.li - IT Stuff
+SiteTitle: woernd.li - IT Blog
 PageTitle: |
   =>
   {
@@ -10,3 +10,4 @@ PageTitle: |
 PostSources: posts/*
 IsPost: => Outputs.FilterSources(Context.GetString("PostSources")).ContainsById(Document)
 Layout: /_layout.cshtml
+Image: /img/skyline-bg.jpg
