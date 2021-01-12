@@ -11,3 +11,4 @@ PostSources: posts/*
 IsPost: => Outputs.FilterSources(Context.GetString("PostSources")).ContainsById(Document)
 Layout: /_layout.cshtml
 Image: /img/skyline-bg.jpg
+DateTimeInputCulture: en-US
