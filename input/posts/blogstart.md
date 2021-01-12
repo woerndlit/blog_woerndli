@@ -1,6 +1,6 @@
 # New beginnings
 
-As I'm facing new opportunities and challenges in 2021, I've decided tackle an old project and start a Blog again.
+As I'm facing new opportunities and challenges in 2021, I've decided to tackle an old project and start a Blog again.
 Content will be focused on technical challenges and solutions I'm facing in my day to day work in IT as well as IT related hobby projects.
 <br>
 ## Motivation
