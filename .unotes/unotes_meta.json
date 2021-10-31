@@ -13,7 +13,8 @@
           "files": {
             "blogstart": 0,
             "projectblogoverview": 1,
-            "azurestoragestaticwebsite": 2
+            "azurestoragestaticwebsite": 2,
+            "dat-xmllogicpackage-workaround": 3
           }
         },
         "img": {
