@@ -1,4 +1,4 @@
-# Prelimenary
+# Preliminary
 
 In ConfigMgr OSD, I like to use the Modern Driver and BIOS Management Solution from the guys over at MSEndpointMgr.com ([Modern Driver Management - MSEndpointMgr](https://msendpointmgr.com/modern-driver-management/)) especially since they started to integrate the possibility to use XML logic files to identify the correct driver package during OSD.
 
