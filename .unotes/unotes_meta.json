@@ -42,7 +42,21 @@
     "bin": {
       "name": "bin",
       "isOrdered": true,
-      "folders": {},
+      "folders": {
+        "Debug": {
+          "name": "Debug",
+          "isOrdered": true,
+          "folders": {
+            "net5.0": {
+              "name": "net5.0",
+              "isOrdered": true,
+              "folders": {},
+              "files": {}
+            }
+          },
+          "files": {}
+        }
+      },
       "files": {}
     },
     "output": {
