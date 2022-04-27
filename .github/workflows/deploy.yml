@@ -22,19 +22,15 @@ jobs:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
       - uses: azure/CLI@v1
         with:
-          azcliversion: 2.0.72
           inlineScript: az storage blob delete-batch --account-name ${{ secrets.STORAGE_ACCOUNT_NAME }} -s '$web'
       - uses: azure/CLI@v1
         with:
-          azcliversion: 2.0.72
           inlineScript: az storage blob upload-batch --account-name ${{ secrets.STORAGE_ACCOUNT_NAME }} -d '$web' -s ./output
       - uses: azure/CLI@v1
         with:
-          azcliversion: 2.0.72
           inlineScript: az storage blob upload-batch --account-name ${{ secrets.STORAGE_ACCOUNT_NAME }} -d '$web' -s ./output --pattern *.html --content-type text/html
       - uses: azure/CLI@v1
         with:
-          azcliversion: 2.0.72
           inlineScript: az cdn endpoint purge --content-paths "/*" --profile-name "${{ secrets.CDN_PROFILE_NAME }}" --name "${{ secrets.CDN_ENDPOINT }}" --resource-group "${{ secrets.RESOURCE_GROUP }}"         
       - run: |
               az logout
