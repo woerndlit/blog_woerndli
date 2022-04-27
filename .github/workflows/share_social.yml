@@ -1,0 +1,8 @@
+name: Share latest post in social media
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'input/posts/**.md'
