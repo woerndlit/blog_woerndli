@@ -2,20 +2,20 @@
 
 In the modern IT landscape it is important to know what cloud applications your users are using while also having the ability to block access to those apps if needed.
 
-For that reason, Microsoft offers a Cloud Acceess Security Broker solution called Microsoft Defender for Cloud Apps (MDCA) as a part of their Microsoft Defender product line.
+For that reason, Microsoft offers a Cloud Access Security Broker solution called Microsoft Defender for Cloud Apps (MDCA) as a part of their Microsoft Defender product line.
 
-You can use MDCA to analyze cloud application usage of your users, sanction or unsaction those apps or control how your data can be used in those apps (depending on the implementation of the app into MDCA).
+You can use MDCA to analyze cloud application usage of your users, sanction or unsanction those apps or control how your data can be used in those apps (depending on the implementation of the app into MDCA).
 You can also use MDCA to monitor complete sessions and control up- and downloads to those applications based on multiple criterias by connecting the apps to your Azure AD and leveraging Azure ADs Conditional Access policies.
 
 The downside of connecting a cloud app in that way is, that through this the cloud application is automatically sanctioned in MDCA, but the sessions are only monitored if the users are logging in with their Azure AD credentials into the cloud app. If a user chooses to login with private credentials, the sessions are not monitored and it is not possible to control what data is shared within these sessions.
 
-The recommended remidiation to this issue is making sure to protect and encrypt your importand and confidential data.
+The recommended remediation to this issue is making sure to protect and encrypt your important and confidential data.
 
-In this article however, I'm pursuing the goal to allowing access to a Azure AD connected Dropbox Business instance while blocking the ability to share data to private dropbox accounts.
+In this article however, I'm pursuing the goal to allowing access to a Azure AD connected Dropbox Business instance while blocking the ability to share data to private Dropbox accounts.
 
 ## Products used
 
-To achieve this goal, I'm uinsg the following Microsoft products.
+To achieve this goal, I'm using the following Microsoft products.
 
 * Microsoft Defender for Cloud Apps (MDCA) (to monitor and control sessions to the connected Dropbox for Business instance)
 * Microsoft Endpoint DLP (to limit upload and download possibilities to all other Dropbox instances)
@@ -56,7 +56,7 @@ First, we need to connect the Dropbox for Business instance to Azure AD for sing
 
 ![image.png](.media/img_30.png)
 
-7\. Copy the Login URL and add it as the Identity provider sign\-in URL in the SSO settings of your Dropbox Business account\.
+7\. Copy the Login URL and add it as the Identity provider sign\-in URL in the SSO settings of your Dropbox Business account.
 
 ![image.png](.media/img_31.png)
 
@@ -111,11 +111,11 @@ First, we need to connect the Dropbox for Business instance to Azure AD for sing
 
 ### Result
 
-If we now navigate to Discovered Apps in MDCA portal, we see that Dropbox has been sanctioned as a cloud app and we cannot unsaction it as long as it is connected.
+If we now navigate to Discovered Apps in MDCA portal, we see that Dropbox has been sanctioned as a cloud app and we cannot unsanction it as long as it is connected.
 
 ![image.png](.media/img_40.png)
 
-After logging into Dropbox with our Azure AD Credentials, we see that MDCA is redirecting our traffic throug a reverse proxy to monitor the Dropbox traffic.
+After logging into Dropbox with our Azure AD Credentials, we see that MDCA is redirecting our traffic through a reverse proxy to monitor the Dropbox traffic.
 
 ![image.png](.media/img_41.png)
 If we login with a private credentials to another Dropbox instance, traffic is still going directly to [www.dropbox.com](http://www.dropbox.com) and cannot be controlled.
@@ -132,7 +132,7 @@ If we login with a private credentials to another Dropbox instance, traffic is s
 
 ![image.png](.media/img_42.png)
 
-3\. In "Browser and domian restrictions to sensitive data" choose "Block" for service domains and add the Dropbox domains\. \(In production you would change this to "Allow" service domains and only allow your explicitly sanctioned domains\)
+3\. In "Browser and domain restrictions to sensitive data" choose "Block" for service domains and add the Dropbox domains\. \(In production you would change this to "Allow" service domains and only allow your explicitly sanctioned domains\)
 
 ![image.png](.media/img_43.png)
 
@@ -161,7 +161,7 @@ Block Service domain and browser activities for both of them:
 
 ![img_48.png](.media/img_52.png)![image.png](.media/img_48.png)
 
-4\. Save the policy and wait up to an hour for the new policy to becom active\.
+4\. Save the policy and wait up to an hour for the new policy to become active\.
 
 - - -
 
@@ -179,4 +179,4 @@ When logging in with a private Dropbox account, upload of documents is restricte
 
 ## Conclusion
 
-In my opinion, Microsofts security products provide already great value if you implement them one at a time. If you start to combine them to solutions for your specific scenarios however, that is when you get the most benefit out of them.
+In my opinion, Microsoft's security products provide already great value if you implement them one at a time. If you start to combine them to solutions for your specific scenarios however, that is when you get the most benefit out of them.
