@@ -28,15 +28,15 @@ To achieve this goal, I'm uinsg the following Microsoft products.
 
 First, we need to connect the Dropbox for Business instance to Azure AD for single sign-on.
 
-1\. Go to the Enterprise applications blade in Azure AD and add a new application ([https://portal.azure.com/#blade/Microsoft\_AAD\_IAM/StartboardApplicationsMenuBlade/AppAppsPreview/menuId/](https://portal.azure.com/#blade/Microsoft_AAD_IAM/StartboardApplicationsMenuBlade/AppAppsPreview/menuId/))
+1\. Go to the Enterprise applications blade in Azure AD and add a new application \([Enterprise Applications](https://portal.azure.com/#blade/Microsoft_AAD_IAM/StartboardApplicationsMenuBlade/AppAppsPreview/menuId/))
 
 ![image.png](.media/img_23.png)
 
-2\. Search for Dropbox Business, select it and click Create
+2\. Search for Dropbox Business\, select it and click Create
 
 ![image.png](.media/img_24.png)
 
-3\. When the app is created, go to the Single sign-on blade and choose SAML
+3\. When the app is created\, go to the Single sign\-on blade and choose SAML
 
 ![image.png](.media/img_25.png)
 
@@ -56,13 +56,13 @@ First, we need to connect the Dropbox for Business instance to Azure AD for sing
 
 ![image.png](.media/img_30.png)
 
-7\. Copy the Login URL and add it as the Identity provider sign-in URL in the SSO settings of your Dropbox Business account.
+7\. Copy the Login URL and add it as the Identity provider sign\-in URL in the SSO settings of your Dropbox Business account\.
 
 ![image.png](.media/img_31.png)
 
-8\. ![image.png](.media/img_32.png)
+8. ![image.png](.media/img_32.png)
 
-9\. To finish the configuration, add the users or groups which will have access to this application
+9\. To finish the configuration\, add the users or groups which will have access to this application
 
 ![image.png](.media/img_33.png)
 
@@ -70,9 +70,9 @@ First, we need to connect the Dropbox for Business instance to Azure AD for sing
 
 ### Create Conditional Access Session Control Policy
 
-1\. Go to Azure AD Conditional Access in the Azure Portal ([Conditional Access - Microsoft Azure](https://portal.azure.com/#blade/Microsoft_AAD_IAM/ConditionalAccessBlade/Policies))
+1\. Go to Azure AD Conditional Access in the Azure Portal \([Conditional Access - Microsoft Azure](https://portal.azure.com/#blade/Microsoft_AAD_IAM/ConditionalAccessBlade/Policies))
 
-2\. Create a new Policy called "CA001 - Dropbox Business Session Control"
+2\. Create a new Policy called "CA001 \- Dropbox Business Session Control"
 
 3\. Select users or groups to assign this policy to
 
@@ -82,7 +82,7 @@ First, we need to connect the Dropbox for Business instance to Azure AD for sing
 
 ![image.png](.media/img_35.png)
 
-5\. Choose "Use Conditional Access App Control" in Session Control and select "Use custom policy..."
+5\. Choose "Use Conditional Access App Control" in Session Control and select "Use custom policy\.\.\."
 
 ![image.png](.media/img_36.png)
 
@@ -92,7 +92,7 @@ First, we need to connect the Dropbox for Business instance to Azure AD for sing
 
 1\. Go to the [MDCA Portal](https://portal.cloudappsecurity.com)
 
-2\. Navigate to Conditional access in Control -> Policies and create a new policy called: "SP01 - Monitor Dropbox"
+2\. Navigate to Conditional access in Control \-\> Policies and create a new policy called: "SP01 \- Monitor Dropbox"
 
 ![image.png](.media/img_37.png)
 
@@ -100,7 +100,7 @@ First, we need to connect the Dropbox for Business instance to Azure AD for sing
 
 ![image.png](.media/img_38.png)
 
-4\. Set the session control type to Monitor only.
+4\. Set the session control type to Monitor only\.
 *Note: Here you can also control the the activities performed within your connected Dropbox instances, but this is not the scope of this article.*
 
 ![image.png](.media/img_39.png)
@@ -132,7 +132,7 @@ If we login with a private credentials to another Dropbox instance, traffic is s
 
 ![image.png](.media/img_42.png)
 
-3\. In "Browser and domian restrictions to sensitive data" choose "Block" for service domains and add the Dropbox domains. (In production you would change this to "Allow" service domains and only allow your explicitly sanctioned domains)
+3\. In "Browser and domian restrictions to sensitive data" choose "Block" for service domains and add the Dropbox domains\. \(In production you would change this to "Allow" service domains and only allow your explicitly sanctioned domains\)
 
 ![image.png](.media/img_43.png)
 
@@ -140,7 +140,7 @@ If we login with a private credentials to another Dropbox instance, traffic is s
 
 ### Create Data loss prevention policy
 
-1\. Create a new custom policy named DLP001 - Dropbox restrictions
+1\. Create a new custom policy named DLP001 \- Dropbox restrictions
 
 ![image.png](.media/img_44.png)
 
@@ -161,9 +161,10 @@ Block Service domain and browser activities for both of them:
 
 ![img_48.png](.media/img_52.png)![image.png](.media/img_48.png)
 
-4\. Save the policy and wait up to an hour for the new policy to becom active.
+4\. Save the policy and wait up to an hour for the new policy to becom active\.
 
 - - -
+
 ## Result
 
 When logging in to our Dropbox business account, we can still upload documents
