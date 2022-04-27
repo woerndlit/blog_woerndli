@@ -2,13 +2,13 @@
 
 In the modern IT landscape it is important to know what cloud applications your users are using while also having the ability to block access to those apps if needed.
 
-For that reason, Microsoft offers a Cloud Acceess Security Broker solution called Microsoft Defender for Cloud Apps (MDCA) as a part of their Microsoft Defender product line.
+For that reason, Microsoft offers a Cloud Acceess Security Broker solution called Microsoft Defender for Cloud Apps (MCAS) as a part of their Microsoft Defender product line.
 
-You can use MDCA to analyze cloud application usage of your users to sanction or unsaction those apps. You can also use MDCA to monitor sessions and control up- and downloads to those applications based on multiple criterias by connecting the apps to your Azure AD and leveraging Azure ADs Conditional Access policies.
+You can use MCAS to analyze cloud application usage of your users to sanction or unsaction those apps. You can also use MCAS to monitor sessions and control up- and downloads to those applications based on multiple criterias by connecting the apps to your Azure AD and leveraging Azure ADs Conditional Access policies.
 
-For a great overview of MDCA please visit:
+For a great overview of MCAS please visit:
 
-The downside of connecting a cloud app in that way is, that through this the cloud application is automatically sanctioned in MDCA, but the sessions are only monitored if the users are logging in with their Azure AD credentials into the cloud app. If a user chooses to login with private credentials, the sessions are not monitored and it is not possible to control what data is shared within these sessions.
+The downside of connecting a cloud app in that way is, that through this the cloud application is automatically sanctioned in MCAS, but the sessions are only monitored if the users are logging in with their Azure AD credentials into the cloud app. If a user chooses to login with private credentials, the sessions are not monitored and it is not possible to control what data is shared within these sessions.
 
 The recommended remidiation to this issue is making sure to protect and encrypt your importand and confidential data.
 
@@ -21,7 +21,7 @@ To achieve this goal, I'm uinsg the following Microsoft solutions.
 * Microsoft Defender for Cloud Apps (to monitor and control sessions to the connected Dropbox for Business instance)
 * Microsoft Endpoint DLP (to limit upload and download possibilities to all other Dropbox instances)
 
-## MDCA: Connect Dropbox for Business for Session Control
+## MCAS: Connect Dropbox for Business for Session Control
 
 ### Connect Dropbox to AzureAD for SSO
 
@@ -60,7 +60,7 @@ First, we need to connect the Dropbox for Business instance to Azure AD for sing
 
 ### Create Conditional Access Policy in Microsoft Defender for Cloud Apps
 
-1. Go to the [MDCA Portal](https://portal.cloudappsecurity.com)
+1. Go to the [MCAS Portal](https://portal.cloudappsecurity.com)
 2. Navigate to Conditional access in Control -> Policies and create a new policy called: "SP01 - Monitor Dropbox"
 ![image.png](.media/img_37.png)
 3. Filter the Acitivity source to Dropbox
@@ -73,10 +73,10 @@ First, we need to connect the Dropbox for Business instance to Azure AD for sing
 <br>
 ### Result
 
-If we now navigate to Discovered Apps in MDCA portal, we see that Dropbox has been sanctioned as a cloud app and we cannot unsaction it as long as it is connected.
+If we now navigate to Discovered Apps in MCAS portal, we see that Dropbox has been sanctioned as a cloud app and we cannot unsaction it as long as it is connected.
 ![image.png](.media/img_40.png)
 
-After logging into Dropbox with our Azure AD Credentials, we see that MDCA is redirecting our traffic throug a reverse proxy to monitor the Dropbox traffic.
+After logging into Dropbox with our Azure AD Credentials, we see that MCAS is redirecting our traffic throug a reverse proxy to monitor the Dropbox traffic.
 ![image.png](.media/img_41.png)
 If we login with a private credentials to another Dropbox instance, traffic is still going directly to [www.dropbox.com](http://www.dropbox.com) and cannot be controlled.
 <br>
@@ -115,6 +115,6 @@ When logging in to our Dropbox business account, we can still upload documents
 
 ### ![image.png](.media/img_50.png)
 <br>
-When logging inwith a private Dropbox account, upload of documents is restricted based on the service domain.
+When logging in with a private Dropbox account, upload of documents is restricted based on the service domain.
 
 ![image.png](.media/img_51.png)
