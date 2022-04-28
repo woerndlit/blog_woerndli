@@ -60,7 +60,7 @@ First, we need to connect the Dropbox for Business instance to Azure AD for sing
 
 ![image.png](.media/img_31.png)
 
-8. ![image.png](.media/img_32.png)
+![image.png](.media/img_32.png)
 
 9\. To finish the configuration\, add the users or groups which will have access to this application
 
