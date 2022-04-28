@@ -62,7 +62,7 @@ First, we need to connect the Dropbox for Business instance to Azure AD for sing
 
 ![image.png](.media/img_32.png)
 
-9\. To finish the configuration\, add the users or groups which will have access to this application
+8\. To finish the configuration\, add the users or groups which will have access to this application
 
 ![image.png](.media/img_33.png)
 
@@ -176,7 +176,3 @@ When logging in to our Dropbox business account, we can still upload documents
 When logging in with a private Dropbox account, upload of documents is restricted based on the service domain.
 
 ![image.png](.media/img_51.png)
-
-## Conclusion
-
-In my opinion, Microsoft's security products provide already great value if you implement them one at a time. If you start to combine them to solutions for your specific scenarios however, that is when you get the most benefit out of them.
