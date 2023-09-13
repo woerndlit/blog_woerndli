@@ -79,3 +79,5 @@ Depending on the proxy infrastructure used, the dedicated service account should
 
 While the reported issue is certainly a design flaw, the impact on a properly configured and secured PatchMyPC environment is rather limited.
 The above information might help you to adjust your environment if credentials are used.
+
+Under all circumstances, make sure to properly secure and monitor the systems involved with PatchMyPC Publisher service.
