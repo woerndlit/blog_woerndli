@@ -2,11 +2,11 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Statiq.Web" Version="1.0.0-beta.17" />
+    <PackageReference Include="Statiq.Web" Version="1.0.0-beta.58" />
   </ItemGroup>
 
 </Project>
