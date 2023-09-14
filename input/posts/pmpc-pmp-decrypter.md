@@ -67,7 +67,7 @@ Microsoft provides some guidance, how to configure your services and devices to 
 
 ### Proxy Authentication
 
-In moste enterprises, On-Premise systems like Configuration Manager connect through a Proxy to the Internet.
+In most enterprises, On-Premise systems like Configuration Manager connect through a Proxy to the Internet.
 
 When using dedicated service accounts to authenticate to the proxy, an attacker might use the gathered credentials to connect to various internet endpoints they might would not be able to otherwise.
 
