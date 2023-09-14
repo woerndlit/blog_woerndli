@@ -45,7 +45,7 @@ Following PatchMyPC's setup documentation this will also be limited to the follo
 - DeviceManagementRBAC.Read.All (View scopes to be assigned to applications)
 - DeviceManagementServiceConfig.ReadWrite.All (Update Enrollment Status Page configurations)
 
-A better way to setup the connection and getting rid of a usable Cllient Secret in the process, is using a certificate for authenticating the PatchMyPC Publisher Service to Intune.
+A better way to setup the connection and getting rid of a usable Client Secret in the process, is using a certificate for authenticating the PatchMyPC Publisher Service to Intune.
 
 ![Intune Authentication](.media/PMPC_IntuneAuth.png)
 
@@ -57,7 +57,7 @@ Please find detailed instructions to setup certification in PatchMyPC's setup in
 
 When using a user account to authenticate against SMTP services, the gathered credentials could be used for phishing attacks or spreading malware.
 
-Depending on the SMTP service used, you should authenticate the system or use a way to send anonymously, which leaves no secret to decrypt in settings.xml.
+Depending on the SMTP service used, you could authenticate the system or use a way to send anonymously, which leaves no secret to decrypt in settings.xml.
 
 ![SMTP Authentication](.media/PMPC_SMTP_Auth.png)
 
@@ -67,9 +67,9 @@ Microsoft provides some guidance, how to configure your services and devices to 
 
 ### Proxy Authentication
 
-In moste enterprises, On-Premise systems like Configuration Manager connect through a Proxy to then Internet.
+In moste enterprises, On-Premise systems like Configuration Manager connect through a Proxy to the Internet.
 
-When using dedicated service accounts to connect through the proxy, an attacker might use the gathered credentials to connect to various internet endpoints they might would not be able to otherwise.
+When using dedicated service accounts to authenticate to the proxy, an attacker might use the gathered credentials to connect to various internet endpoints they might would not be able to otherwise.
 
 Depending on the proxy infrastructure used, the dedicated service account should only be able to connect from a specific system or the authentication to the proxy should be based on the system itself directly.
 
