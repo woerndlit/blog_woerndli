@@ -77,7 +77,13 @@ Depending on the proxy infrastructure used, the dedicated service account should
 
 ## Summary
 
-While the reported issue is certainly a design flaw, the impact on a properly configured and secured PatchMyPC environment is rather limited.
-The above information might help you to adjust your environment if credentials are used.
+While the reported issue is certainly a design flaw, the impact on a properly configured and secured PatchMyPC environment is rather limited and only applicable if you use dedicated password/secret based credentials to connect the PatchMyPC Publisher service to one of the following systems:
 
-Under all circumstances, make sure to properly secure and monitor the systems involved with PatchMyPC Publisher service.
+- Microsoft Configuration Manager SMS Provider
+- Intune
+- SMTP Server
+- Proxy Server
+
+If this is the case in your environment, the above information might help you to adjust or remove those credentials.
+
+**Under all circumstances, make sure to properly secure and monitor the systems involved with PatchMyPC Publisher service.**
