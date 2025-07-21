@@ -1,8 +1,0 @@
-name: backup_job
-jobs:
-  steps:
-    - uses: Amadevus/pwsh-script@v2
-      id: script
-      with:
-        script:
-          Write-ActionWarning "it worked"
