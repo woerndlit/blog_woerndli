@@ -34,6 +34,6 @@ jobs:
     steps:
       - name: Write output
         shell: powershell
-        run: .\backup.ps1 -certificatestring "${{ secrets.EXCHANGE_CERTIFICATE }}" -certificatepw "${{ secrets.CERTIFICATE_PASSWORD }}" -appid "${{ secrets.EXCHANGE_APPLICATION_ID }}"
+        run: ./backup.ps1 -certificatestring "${{ secrets.EXCHANGE_CERTIFICATE }}" -certificatepw "${{ secrets.CERTIFICATE_PASSWORD }}" -appid "${{ secrets.EXCHANGE_APPLICATION_ID }}"
     
     
