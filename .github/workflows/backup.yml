@@ -34,6 +34,7 @@ jobs:
     steps:
       - name: Write output
         shell: powershell
-        run: Get-ChildItem -Recurse | ForEach-Object { Write-Host $_.FullName }
+        run: Write-Host (Get-Location).Path
+
     
     
