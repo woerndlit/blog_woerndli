@@ -29,3 +29,6 @@ foreach ($dlppolicy in $dlppolicies) {
         $rule | ConvertTo-Json -Depth 100 | Out-File -FilePath "$($backuppath)\$($dlppolicy.Guid)\rule_$($rule.Guid).json"
     }
 }
+
+Get-ChildItem -Recurse | ForEach-Object { $_.FullName }
+
