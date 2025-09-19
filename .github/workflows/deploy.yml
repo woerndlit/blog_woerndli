@@ -1,40 +1,55 @@
 # This is a basic workflow to help you get started with Actions
 
-name: Deploy (manual)
+name: Deploy
 
-# Workflow is manual to avoid accidental deploys during testing.
+# Automatic deploy on push to master, manual dispatch still available.
 on:
-  workflow_dispatch: {}
-    
+  push:
+    branches:
+      - 'master'
+    paths:
+      - 'input/**'
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: '8.0.x'
+
       - name: Restore, Build and Run
         run: |
           dotnet restore
           dotnet build --configuration Release --no-restore
           dotnet run --configuration Release --no-build
-      - uses: azure/login@v1
+
+      - name: Azure Login
+        uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
-      - uses: azure/CLI@v1
+
+      - name: Clear storage container (safe)
+        uses: azure/CLI@v1
         with:
-          inlineScript: az storage blob delete-batch --account-name ${{ secrets.STORAGE_ACCOUNT_NAME }} -s '$web'
-      - uses: azure/CLI@v1
+          inlineScript: |
+            az storage blob delete-batch --account-name ${{ secrets.STORAGE_ACCOUNT_NAME }} -s '$web' --if-match '*'
+
+      - name: Upload site files
+        uses: azure/CLI@v1
         with:
-          inlineScript: az storage blob upload-batch --account-name ${{ secrets.STORAGE_ACCOUNT_NAME }} -d '$web' -s ./output
-      - uses: azure/CLI@v1
+          inlineScript: |
+            az storage blob upload-batch --account-name ${{ secrets.STORAGE_ACCOUNT_NAME }} -d '$web' -s ./output
+            az storage blob upload-batch --account-name ${{ secrets.STORAGE_ACCOUNT_NAME }} -d '$web' -s ./output --pattern "*.html" --content-type text/html
+
+      - name: Purge CDN endpoint
+        uses: azure/CLI@v1
         with:
-          inlineScript: az storage blob upload-batch --account-name ${{ secrets.STORAGE_ACCOUNT_NAME }} -d '$web' -s ./output --pattern *.html --content-type text/html
-      - uses: azure/CLI@v1
-        with:
-          inlineScript: az cdn endpoint purge --content-paths "/*" --profile-name "${{ secrets.CDN_PROFILE_NAME }}" --name "${{ secrets.CDN_ENDPOINT }}" --resource-group "${{ secrets.RESOURCE_GROUP }}"         
-      - run: |
-              az logout
+          inlineScript: |
+            az cdn endpoint purge --content-paths "/*" --profile-name "${{ secrets.CDN_PROFILE_NAME }}" --name "${{ secrets.CDN_ENDPOINT }}" --resource-group "${{ secrets.RESOURCE_GROUP }}"
+
+      - name: Azure Logout
+        run: az logout
