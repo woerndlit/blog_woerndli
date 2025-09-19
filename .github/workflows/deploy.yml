@@ -1,26 +1,26 @@
 # This is a basic workflow to help you get started with Actions
 
-name: CI
+name: Deploy (manual)
 
-# Controls when the action will run. 
+# Workflow is manual to avoid accidental deploys during testing.
 on:
-  # Triggers the workflow on push or pull request events but only for the master branch
-  push:
-    branches:
-      - 'master'
-    paths:
-      - 'input/**'
+  workflow_dispatch: {}
     
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-dotnet@v1
+      - uses: actions/checkout@v3
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: '7.0'
-      - run: dotnet run
+          dotnet-version: '8.0.x'
+      - name: Restore, Build and Run
+        run: |
+          dotnet restore
+          dotnet build --configuration Release --no-restore
+          dotnet run --configuration Release --no-build
       - uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
