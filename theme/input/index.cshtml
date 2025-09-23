@@ -2,7 +2,7 @@ Order: 0
 ArchiveSources: => GetString("PostSources")
 ArchiveFilter: => GetBool("IsPost")
 ArchiveDestination: >
-  => GetInt("Index") <= 1 ? $"index.html" : $"page/{GetInt("Index")}.html"
+    => GetInt("Index") <= 1 ? $"index.html" : $"page/{GetInt("Index")}/index.html"
 ArchivePageSize: 3
 ArchiveOrderKey: Published
 ArchiveOrderDescending: true
