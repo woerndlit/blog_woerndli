@@ -14,6 +14,8 @@ namespace MySite
 {
   public class Program
   {
+    private static readonly Regex MediaRegex = new(@"\.media/(?<path>[A-Za-z0-9_\-./]+)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
     public static async Task<int> Main(string[] args)
     {
       var bootstrapper = Bootstrapper
@@ -48,26 +50,7 @@ namespace MySite
 
             if (string.IsNullOrWhiteSpace(slug)) slug = "post";
 
-            // Simple slugify: lowercase, remove diacritics, keep alphanumerics, spaces -> '-', collapse dashes
-            slug = slug.ToLowerInvariant();
-            slug = slug.Normalize(NormalizationForm.FormD);
-            var sb = new StringBuilder();
-            foreach (var ch in slug)
-            {
-              var cat = CharUnicodeInfo.GetUnicodeCategory(ch);
-              if (cat != UnicodeCategory.NonSpacingMark)
-              {
-                sb.Append(ch);
-              }
-            }
-            slug = sb.ToString().Normalize(NormalizationForm.FormC);
-            slug = Regex.Replace(slug, @"[^a-z0-9\s-]", "");
-            slug = Regex.Replace(slug, @"\s+", "-");
-            slug = Regex.Replace(slug, "-+", "-");
-            slug = slug.Trim('-');
-            if (string.IsNullOrWhiteSpace(slug)) slug = "post";
-
-            return new NormalizedPath($"posts/{slug}/index.html");
+            return new NormalizedPath($"posts/{GetSlug(doc)}/index.html");
           })));
 
           // Add a module to copy referenced .media files into each post's output folder
@@ -102,40 +85,16 @@ namespace MySite
               }
 
               // Find .media references anywhere in the content (capture into named group 'path')
-              var mediaRegex = new Regex(@"\.media/(?<path>[A-Za-z0-9_\-./]+)", RegexOptions.IgnoreCase);
-              var matches = mediaRegex.Matches(content);
+              var matches = MediaRegex.Matches(content);
               if (matches.Count == 0)
               {
                 return doc;
               }
 
-              // Compute a normalized slug from metadata or source for logging/fallback
-              string sourceForSlug = doc.Source.ToString() ?? string.Empty;
-              string slug = doc.GetString("Slug");
-              if (string.IsNullOrWhiteSpace(slug)) slug = Path.GetFileNameWithoutExtension(sourceForSlug);
-              if (string.IsNullOrWhiteSpace(slug)) slug = "post";
-
-              slug = slug.ToLowerInvariant();
-              slug = slug.Normalize(NormalizationForm.FormD);
-              var sbSlug = new StringBuilder();
-              foreach (var ch in slug)
-              {
-                var cat = CharUnicodeInfo.GetUnicodeCategory(ch);
-                if (cat != UnicodeCategory.NonSpacingMark)
-                {
-                  sbSlug.Append(ch);
-                }
-              }
-              slug = sbSlug.ToString().Normalize(NormalizationForm.FormC);
-              slug = Regex.Replace(slug, @"[^a-z0-9\s-]", "");
-              slug = Regex.Replace(slug, @"\s+", "-");
-              slug = Regex.Replace(slug, "-+", "-");
-              slug = slug.Trim('-');
-              if (string.IsNullOrWhiteSpace(slug)) slug = "post";
-
               // Determine output media folder from the document destination (set by SetDestination)
               // Fallback to the slug-derived output path.
               string destPath = doc.Destination.ToString() ?? string.Empty;
+              string slug = GetSlug(doc);
               string outputPostMediaBase;
               if (!string.IsNullOrWhiteSpace(destPath))
               {
@@ -184,6 +143,41 @@ namespace MySite
 
       var result = await bootstrapper.RunAsync();
       return result;
+    }
+
+    private static string GetSlug(IDocument doc)
+    {
+      string source = string.Empty;
+      if (doc?.Source != null)
+      {
+        source = doc.Source.ToString();
+      }
+      string slug = doc?.GetString("Slug");
+      if (string.IsNullOrWhiteSpace(slug))
+      {
+        slug = Path.GetFileNameWithoutExtension(source);
+      }
+      if (string.IsNullOrWhiteSpace(slug)) slug = "post";
+
+      slug = slug.ToLowerInvariant();
+      slug = slug.Normalize(NormalizationForm.FormD);
+      var sb = new StringBuilder();
+      foreach (var ch in slug)
+      {
+        var cat = CharUnicodeInfo.GetUnicodeCategory(ch);
+        if (cat != UnicodeCategory.NonSpacingMark)
+        {
+          sb.Append(ch);
+        }
+      }
+      slug = sb.ToString().Normalize(NormalizationForm.FormC);
+      slug = Regex.Replace(slug, @"[^a-z0-9\s-]", "");
+      slug = Regex.Replace(slug, @"\s+", "-");
+      slug = Regex.Replace(slug, "-+", "-");
+      slug = slug.Trim('-');
+      if (string.IsNullOrWhiteSpace(slug)) slug = "post";
+
+      return slug;
     }
   }
 }
