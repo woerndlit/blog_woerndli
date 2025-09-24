@@ -1,12 +1,6 @@
 # blog_woerndli
 ![CI](https://github.com/woerndlit/blog_woerndli/workflows/CI/badge.svg)
 
-## Per-post output layout
-
-Each blog post is now generated into its own folder with an `index.html` file. For
-```
-```
-
 This repository contains the source and generator for the blog available at
 https://www.woernd.li.
 
