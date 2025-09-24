@@ -32,9 +32,18 @@
               @if (Document.ContainsKey("Tags"))
               {
                 <div class="mt-3">
-                  @foreach (IDocument tag in Document.GetList<string>("Tags")
-                    .Select(x => Outputs["tags/index.html"].First().GetChildren().FirstOrDefault(y => y.GetTitle().Equals(x, StringComparison.OrdinalIgnoreCase)))
-                    .Where(x => x != null))
+                  @{
+                    var tagsOutput = Outputs["tags/index.html"].FirstOrDefault();
+                    var tagDocs = Array.Empty<IDocument>();
+                    if (tagsOutput != null)
+                    {
+                      tagDocs = Document.GetList<string>("Tags")
+                        .Select(x => tagsOutput.GetChildren().FirstOrDefault(y => y.GetTitle().Equals(x, StringComparison.OrdinalIgnoreCase)))
+                        .Where(x => x != null)
+                        .ToArray();
+                    }
+                  }
+                  @foreach (IDocument tag in tagDocs)
                   {
                       <a href="@Context.GetLink(tag)" class="badge badge-light"> @tag.GetTitle()</a>
                   }

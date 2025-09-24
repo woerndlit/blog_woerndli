@@ -232,14 +232,15 @@ namespace MySite
           {
             try
             {
-              // For archive root pages the GroupKey is null/empty and the Index is 1 (or <=1).
-              // For per-group pages GroupKey is set. Use these to detect the root tags page.
               var groupKey = doc?.GetString(Keys.GroupKey);
               var index = doc?.GetInt(Keys.Index) ?? 1;
+              var archiveKey = doc?.GetString("ArchiveKey");
 
-              if (string.IsNullOrWhiteSpace(groupKey) && index <= 1)
+              // Only override the destination when this is the root of the Tags archive.
+              if (string.Equals(archiveKey, "Tags", StringComparison.OrdinalIgnoreCase)
+                && string.IsNullOrWhiteSpace(groupKey) && index <= 1)
               {
-                return new NormalizedPath("tags/index.html");
+                return Task.FromResult(new NormalizedPath("tags/index.html"));
               }
             }
             catch
@@ -247,7 +248,10 @@ namespace MySite
               // ignore and fall back to existing destination
             }
 
-            return doc?.Destination ?? new NormalizedPath("tags/index.html");
+            // Only override when root tags archive detected. Otherwise return the
+            // existing destination (or null to let Statiq decide) as a completed task.
+            var existing = doc?.Destination ?? (NormalizedPath?)null;
+            return Task.FromResult(existing ?? new NormalizedPath(""));
           })));
         }
       });
