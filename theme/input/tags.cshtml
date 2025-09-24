@@ -1,13 +1,17 @@
+Title: Tags
+ShowInNavbar: true
+Order: 10
+Destination: >
+    => GetInt("Index") <= 1 ? "tags/index.html" : $"tags/{GetInt("Index")}/index.html"
 ArchiveSources: => GetString("PostSources")
 ArchiveFilter: => GetBool("IsPost")
 ArchiveKey: Tags
 ArchiveKeyComparer: => StringComparer.OrdinalIgnoreCase.ToConvertingEqualityComparer()
-ArchiveDestination: >
-    => GetInt("Index") <= 1 ? $"tags/{NormalizedPath.OptimizeFileName(GetString("GroupKey"))}/index.html" : $"tags/{NormalizedPath.OptimizeFileName(GetString("GroupKey"))}/{GetInt("Index")}/index.html"
 ArchivePageSize: 10
 ArchiveOrderKey: Published
 ArchiveOrderDescending: true
-Title: Tags
+ArchiveDestination: >
+    => GetInt("Index") <= 1 ? $"tags/{NormalizedPath.OptimizeFileName(GetString("GroupKey"))}/index.html" : $"tags/{NormalizedPath.OptimizeFileName(GetString("GroupKey"))}/{GetInt("Index")}/index.html"
 ArchiveTitle: => GetString("GroupKey")
 ---
 @if (Document.ContainsKey(Keys.GroupKey))
@@ -18,7 +22,7 @@ ArchiveTitle: => GetString("GroupKey")
                 @Html.Partial("/_posts.cshtml", Document)
             </div>
             <div class="col-md-4 mt-4 mt-md-0 col-sm-height">
-                @foreach (IDocument tag in OutputPages.Get("tags.html").GetChildren().OrderByDescending(x => x.GetChildren().Count()))
+                @foreach (IDocument tag in OutputPages.Get("tags/index.html").GetChildren().OrderByDescending(x => x.GetChildren().Count()))
                 {
                     string badgeStyle = Document.GetString(Keys.GroupKey).Equals(tag.GetTitle(), StringComparison.OrdinalIgnoreCase) ? "badge-dark" : "badge-light";
                     string postCount = tag.GetChildren().Count().ToString();
