@@ -40,6 +40,8 @@ namespace MySite
               return doc.Destination;
             }
 
+            // NOTE: Archives pipeline destination override moved below (outside this lambda)
+
             // Derive a slug: OPTION 1 -> prefer "Slug" metadata, otherwise use the source filename
             string source = doc.Source.ToString() ?? string.Empty;
             string slug = doc.GetString("Slug");
@@ -208,6 +210,44 @@ namespace MySite
             }
 
             return doc;
+          })));
+        }
+        // Ensure the Archives pipeline writes the root tags page into a folder
+        // (e.g. output/tags/index.html) instead of a flat tags.html file.
+        if (engine.Pipelines.TryGetValue("Archives", out var archivesPipeline))
+        {
+          // EXPLANATION:
+          // The Statiq Archives pipeline generates both the overall archive index
+          // (e.g. /tags) and per-group pages (e.g. /tags/<group>/). Both are
+          // rendered using the same template (`theme/input/tags.cshtml`). Relying
+          // on the template source path to detect the root page isn't reliable
+          // because the pipeline reuses the template for per-group pages as well.
+          //
+          // To ensure the root archive is written into a folder (`output/tags/index.html`)
+          // we override the destination in PostProcess when the document has no
+          // `GroupKey` (meaning it's the root) and the `Index` is 1 (or less). This
+          // keeps per-group pages (where `GroupKey` is set) writing to
+          // `tags/<group>/index.html` while preventing a flat `tags.html` file.
+          archivesPipeline.PostProcessModules.Insert(0, new SetDestination(Config.FromDocument<NormalizedPath>(doc =>
+          {
+            try
+            {
+              // For archive root pages the GroupKey is null/empty and the Index is 1 (or <=1).
+              // For per-group pages GroupKey is set. Use these to detect the root tags page.
+              var groupKey = doc?.GetString(Keys.GroupKey);
+              var index = doc?.GetInt(Keys.Index) ?? 1;
+
+              if (string.IsNullOrWhiteSpace(groupKey) && index <= 1)
+              {
+                return new NormalizedPath("tags/index.html");
+              }
+            }
+            catch
+            {
+              // ignore and fall back to existing destination
+            }
+
+            return doc?.Destination ?? new NormalizedPath("tags/index.html");
           })));
         }
       });

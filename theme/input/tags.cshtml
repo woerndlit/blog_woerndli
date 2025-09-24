@@ -22,6 +22,8 @@ ArchiveTitle: => GetString("GroupKey")
                 @Html.Partial("/_posts.cshtml", Document)
             </div>
             <div class="col-md-4 mt-4 mt-md-0 col-sm-height">
+                // Use the folder-style index path because the Archives pipeline writes
+                // the root tags page into `tags/index.html` (not `tags.html`).
                 @foreach (IDocument tag in OutputPages.Get("tags/index.html").GetChildren().OrderByDescending(x => x.GetChildren().Count()))
                 {
                     string badgeStyle = Document.GetString(Keys.GroupKey).Equals(tag.GetTitle(), StringComparison.OrdinalIgnoreCase) ? "badge-dark" : "badge-light";
