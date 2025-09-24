@@ -57,9 +57,9 @@ namespace MySite
           // The module scans the document content for ".media/..." references and copies
           // those files from the input posts .media folder into the post's output .media folder.
           // It returns the original document to avoid replacing its content.
-          // Insert this after the SetDestination module so we can derive the output folder
-          // from the document's destination reliably.
-          contentPipeline.PostProcessModules.Insert(1, new ExecuteConfig(Config.FromDocument((doc, ctx) =>
+          // Add this to the end of PostProcessModules so it runs after destinations are set
+          // and content has been rendered. Append rather than insert at a fixed index.
+          contentPipeline.PostProcessModules.Add(new ExecuteConfig(Config.FromDocument((doc, ctx) =>
           {
             try
             {
@@ -81,7 +81,41 @@ namespace MySite
 
               if (string.IsNullOrEmpty(content))
               {
-                return doc;
+                // If rendered content isn't available in the document, fall back to the
+                // source markdown so we can still discover .media references.
+                try
+                {
+                  string sourcePath = null;
+                  if (doc.Source != null)
+                  {
+                    sourcePath = doc.Source.ToString();
+                  }
+                  if (!string.IsNullOrWhiteSpace(sourcePath))
+                  {
+                    if (File.Exists(sourcePath))
+                    {
+                      content = File.ReadAllText(sourcePath, Encoding.UTF8);
+                    }
+                    else
+                    {
+                      // Try relative to repo root
+                      var alt = Path.Combine(ctx.FileSystem.RootPath.FullPath, sourcePath.Replace('/', Path.DirectorySeparatorChar));
+                      if (File.Exists(alt))
+                      {
+                        content = File.ReadAllText(alt, Encoding.UTF8);
+                      }
+                    }
+                  }
+                }
+                catch (Exception ex)
+                {
+                  ctx.LogWarning(doc, $"Failed reading source file for media scan: {ex.Message}");
+                }
+
+                if (string.IsNullOrEmpty(content))
+                {
+                  return doc;
+                }
               }
 
               // Find .media references anywhere in the content (capture into named group 'path')
@@ -100,7 +134,8 @@ namespace MySite
               {
                 var destDir = destPath.Replace('/', Path.DirectorySeparatorChar);
                 destDir = Path.GetDirectoryName(destDir) ?? "posts";
-                outputPostMediaBase = Path.Combine(ctx.FileSystem.RootPath.FullPath, destDir, ".media");
+                // Ensure we write into the generator output folder (output/...) not repository root
+                outputPostMediaBase = Path.Combine(ctx.FileSystem.RootPath.FullPath, "output", destDir, ".media");
               }
               else
               {
@@ -111,22 +146,58 @@ namespace MySite
               foreach (Match m in matches)
               {
                 var rel = m.Groups["path"].Value.Replace('/', Path.DirectorySeparatorChar).TrimStart('.', Path.DirectorySeparatorChar);
-                var inputPath = Path.Combine(ctx.FileSystem.RootPath.FullPath, "input", "posts", ".media", rel);
-                if (File.Exists(inputPath))
+
+                // Candidate source locations in order of preference:
+                // 1) per-post media: input/posts/{slug}/.media/{rel}
+                // 2) global posts media: input/posts/.media/{rel}
+                // 3) general input media: input/.media/{rel}
+                var candidates = new[]
+                {
+                  Path.Combine(ctx.FileSystem.RootPath.FullPath, "input", "posts", slug, ".media", rel),
+                  Path.Combine(ctx.FileSystem.RootPath.FullPath, "input", "posts", ".media", rel),
+                  Path.Combine(ctx.FileSystem.RootPath.FullPath, "input", ".media", rel)
+                };
+
+                string found = null;
+                foreach (var candidate in candidates)
+                {
+                  if (File.Exists(candidate))
+                  {
+                    found = candidate;
+                    break;
+                  }
+                }
+
+                if (found != null)
                 {
                   try
                   {
-                    var dest = Path.Combine(outputPostMediaBase, Path.GetFileName(inputPath));
-                    File.Copy(inputPath, dest, true);
+                    var dest = Path.Combine(outputPostMediaBase, Path.GetFileName(found));
+                    File.Copy(found, dest, true);
+                    ctx.LogInformation(doc, $"Copied media for post '{slug}': {Path.GetFileName(found)}");
+
+                    // Also remove any global copy that the Assets pipeline may have created
+                    try
+                    {
+                      var globalOutputMedia = Path.Combine(ctx.FileSystem.RootPath.FullPath, "output", "posts", ".media", Path.GetFileName(found));
+                      if (File.Exists(globalOutputMedia))
+                      {
+                        File.Delete(globalOutputMedia);
+                      }
+                    }
+                    catch (Exception ex)
+                    {
+                      ctx.LogWarning(doc, $"Failed removing global media copy for '{found}': {ex.Message}");
+                    }
                   }
                   catch (Exception ex)
                   {
-                    ctx.LogWarning(doc, $"Failed copying media file '{inputPath}' for post '{slug}': {ex.Message}");
+                    ctx.LogWarning(doc, $"Failed copying media file '{found}' for post '{slug}': {ex.Message}");
                   }
                 }
                 else
                 {
-                  ctx.LogWarning(doc, $"Referenced media file not found: {inputPath} for post '{slug}'");
+                  ctx.LogWarning(doc, $"Referenced media file not found for post '{slug}': .media/{rel}");
                 }
               }
             }
