@@ -9,6 +9,8 @@ on:
       - 'master'
     paths:
       - 'input/**'
+  # Allow manual runs from the Actions UI
+  workflow_dispatch: {}
 
 jobs:
   deploy:
