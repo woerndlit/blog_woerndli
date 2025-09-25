@@ -102,6 +102,49 @@ namespace MySite
       });
 
       var result = await bootstrapper.RunAsync();
+
+#if DEBUG
+      // In Debug builds copy any per-post ".media" folders from input/posts
+      // into the generated output/posts/<slug>/.media so local servers can
+      // resolve media referenced as ".media/...". We do this after Statiq
+      // finishes so the output structure already exists.
+      try
+      {
+        var cwd = Directory.GetCurrentDirectory();
+        var inputPostsDir = Path.Combine(cwd, "input", "posts");
+        var outputPostsDir = Path.Combine(cwd, "output", "posts");
+
+        if (Directory.Exists(inputPostsDir) && Directory.Exists(outputPostsDir))
+        {
+          foreach (var postDir in Directory.GetDirectories(inputPostsDir))
+          {
+            var mediaSrc = Path.Combine(postDir, ".media");
+            if (!Directory.Exists(mediaSrc))
+            {
+              continue;
+            }
+
+            var postName = Path.GetFileName(postDir);
+            var destMediaDir = Path.Combine(outputPostsDir, postName, ".media");
+            Directory.CreateDirectory(destMediaDir);
+
+            foreach (var srcFile in Directory.GetFiles(mediaSrc, "*", SearchOption.AllDirectories))
+            {
+              var relative = Path.GetRelativePath(mediaSrc, srcFile);
+              var destPath = Path.Combine(destMediaDir, relative);
+              Directory.CreateDirectory(Path.GetDirectoryName(destPath) ?? destMediaDir);
+              File.Copy(srcFile, destPath, true);
+            }
+          }
+        }
+      }
+      catch (Exception ex)
+      {
+        // Don't fail the build/run if copying media fails; just log in debug output.
+        Console.WriteLine($"[DEBUG] Copying .media failed: {ex.Message}");
+      }
+#endif
+
       return result;
     }
 
