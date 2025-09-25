@@ -2,7 +2,7 @@ Order: 0
 ArchiveSources: => GetString("PostSources")
 ArchiveFilter: => GetBool("IsPost")
 ArchiveDestination: >
-  => GetInt("Index") <= 1 ? $"index.html" : $"page/{GetInt("Index")}.html"
+    => GetInt("Index") <= 1 ? $"index.html" : $"page/{GetInt("Index")}/index.html"
 ArchivePageSize: 3
 ArchiveOrderKey: Published
 ArchiveOrderDescending: true
@@ -15,19 +15,37 @@ ArchiveTitle: => GetString("Title")
         </div>
         <div class="col-md-4 mt-4 mt-md-0 col-sm-height">
             @{
-                IDocument[] tags = Outputs.Get("tags.html")?.GetChildren().OrderByDescending(x => x.GetChildren().Count()).Take(10).ToArray() ?? Array.Empty<IDocument>();
-                if (tags.Length > 0)
+                // Aggregate tags from the posts rendered on this index page (Document.GetChildren())
+                // Count occurrences, sort by count desc, then by name, and render the top 10.
+                var tagCounts = Document.GetChildren()
+                    .SelectMany(d => (d.ContainsKey("Tags") ? d.GetList<string>("Tags") : Enumerable.Empty<string>()))
+                    .Where(t => !string.IsNullOrWhiteSpace(t))
+                    .GroupBy(t => t.Trim(), StringComparer.OrdinalIgnoreCase)
+                    .Select(g => new { Tag = g.Key, Count = g.Count() })
+                    .OrderByDescending(x => x.Count)
+                    .ThenBy(x => x.Tag)
+                    .Take(10)
+                    .ToArray();
+
+                if (tagCounts.Length > 0)
                 {
+                    var tagsOutput = OutputPages.Get("tags/index.html");
                     <div>
                         <h5>Tags</h5>
-                        @foreach (IDocument tag in Outputs.Get("tags.html").GetChildren().OrderByDescending(x => x.GetChildren().Count()).Take(10))
+                        @foreach (var t in tagCounts)
                         {
-                            string postCount = tag.GetChildren().Count().ToString();
-                            <a href="@Context.GetLink(tag)" class="badge badge-light"> @tag.GetTitle() (@postCount)</a>
+                            // Try to find the tag page in the archives so we can link to it
+                            IDocument tagDoc = null;
+                            if (tagsOutput != null)
+                            {
+                                tagDoc = tagsOutput.GetChildren().FirstOrDefault(y => y.GetTitle().Equals(t.Tag, StringComparison.OrdinalIgnoreCase));
+                            }
+                            var link = tagDoc != null ? Context.GetLink(tagDoc) : $"/tags/{NormalizedPath.OptimizeFileName(t.Tag)}/";
+                            <a href="@link" class="badge badge-light"> @t.Tag (@t.Count)</a>
                         }
                         <div class="mt-3">
                             <div class="float-sm-right">
-                                <a class="btn btn-sm btn-primary" href="@Context.GetLink(Outputs.Get("tags.html"))" role="button">All Tags <i class="fas fa-angle-double-right"></i></a>
+                                <a class="btn btn-sm btn-primary" href="/tags" role="button">All Tags <i class="fas fa-angle-double-right"></i></a>
                             </div>
                             <div class="clearfix"></div>
                         </div>

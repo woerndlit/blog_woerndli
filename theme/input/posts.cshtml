@@ -1,7 +1,13 @@
+Title: Posts
+ShowInNavbar: true
+Order: -1
 ArchiveSources: => GetString("PostSources")
 ArchiveFilter: => GetBool("IsPost")
+ArchivePageSize: 10
 ArchiveOrderKey: Published
 ArchiveOrderDescending: true
+ArchiveDestination: >
+    => GetInt("Index") <= 1 ? $"posts/index.html" : $"posts/page/{GetInt("Index")}/index.html"
 ---
 @foreach(IGrouping<int, IDocument> group in Document
     .GetChildren()

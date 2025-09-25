@@ -1,13 +1,17 @@
+Title: Tags
+ShowInNavbar: true
+Order: 10
+Destination: >
+    => GetInt("Index") <= 1 ? "tags/index.html" : $"tags/{GetInt("Index")}/index.html"
 ArchiveSources: => GetString("PostSources")
 ArchiveFilter: => GetBool("IsPost")
 ArchiveKey: Tags
 ArchiveKeyComparer: => StringComparer.OrdinalIgnoreCase.ToConvertingEqualityComparer()
-ArchiveDestination: >
-  => GetInt("Index") <= 1 ? $"tags/{NormalizedPath.OptimizeFileName(GetString("GroupKey"))}/index.html" : $"tags/{NormalizedPath.OptimizeFileName(GetString("GroupKey"))}/{GetInt("Index")}.html"
 ArchivePageSize: 10
 ArchiveOrderKey: Published
 ArchiveOrderDescending: true
-Title: Tags
+ArchiveDestination: >
+    => GetInt("Index") <= 1 ? $"tags/{NormalizedPath.OptimizeFileName(GetString("GroupKey"))}/index.html" : $"tags/{NormalizedPath.OptimizeFileName(GetString("GroupKey"))}/{GetInt("Index")}/index.html"
 ArchiveTitle: => GetString("GroupKey")
 ---
 @if (Document.ContainsKey(Keys.GroupKey))
@@ -18,11 +22,26 @@ ArchiveTitle: => GetString("GroupKey")
                 @Html.Partial("/_posts.cshtml", Document)
             </div>
             <div class="col-md-4 mt-4 mt-md-0 col-sm-height">
-                @foreach (IDocument tag in OutputPages.Get("tags.html").GetChildren().OrderByDescending(x => x.GetChildren().Count()))
+                @{ 
+                    // Always aggregate tag list from the page's child posts
+                    var tagCounts = Document.GetChildren()
+                        .SelectMany(d => (d.ContainsKey("Tags") ? d.GetList<string>("Tags") : Enumerable.Empty<string>()))
+                        .Where(t => !string.IsNullOrWhiteSpace(t))
+                        .GroupBy(t => t.Trim(), StringComparer.OrdinalIgnoreCase)
+                        .Select(g => new { Tag = g.Key, Count = g.Count() })
+                        .OrderByDescending(x => x.Count)
+                        .ThenBy(x => x.Tag)
+                        .ToArray();
+                }
+
+                @if (tagCounts.Length > 0)
                 {
-                    string badgeStyle = Document.GetString(Keys.GroupKey).Equals(tag.GetTitle(), StringComparison.OrdinalIgnoreCase) ? "badge-dark" : "badge-light";
-                    string postCount = tag.GetChildren().Count().ToString();
-                    <a href="@Context.GetLink(tag)" class="badge @badgeStyle"> @tag.GetTitle() (@postCount)</a>
+                    @foreach (var t in tagCounts)
+                    {
+                        var link = $"/tags/{NormalizedPath.OptimizeFileName(t.Tag)}/";
+                        var badgeStyle = Document.ContainsKey(Keys.GroupKey) && Document.GetString(Keys.GroupKey).Equals(t.Tag, StringComparison.OrdinalIgnoreCase) ? "badge-dark" : "badge-light";
+                        <a href="@link" class="badge @badgeStyle"> @t.Tag (@t.Count)</a>
+                    }
                 }
             </div>
         </div>
